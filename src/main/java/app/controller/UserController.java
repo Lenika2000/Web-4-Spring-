@@ -43,7 +43,8 @@ public class UserController {
 	@CrossOrigin
 	@PostMapping(value = "/register")
 	public ResponseEntity<ResponseMessage> createUser(@RequestBody User newUser) {
-		if (newUser.getUsername() == null || newUser.getPassword() == null) {
+		if (newUser.getUsername() == null || newUser.getPassword() == null ||
+				newUser.getPassword().trim().equals("") || newUser.getUsername().trim().equals("")) {
 			logger.error("username or pass is null");
 			return new ResponseEntity<>(new ResponseMessage("Username or password is null"), HttpStatus.BAD_REQUEST);
 		}
