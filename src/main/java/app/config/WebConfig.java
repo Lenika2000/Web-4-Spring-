@@ -30,17 +30,17 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	//включаем cors-запросы
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-	    return new WebMvcConfigurerAdapter() {
-	        @Override
-	        public void addCorsMappings(CorsRegistry registry) {
-	            registry.addMapping("/**").allowedOrigins("http://localhost:4200");
-	          
-	        }
-	    };
-	}
+//	//включаем cors-запросы
+//	@Bean
+//	public WebMvcConfigurer corsConfigurer() {
+//	    return new WebMvcConfigurerAdapter() {
+//	        @Override
+//	        public void addCorsMappings(CorsRegistry registry) {
+//	            registry.addMapping("/**").allowedOrigins("http://localhost:4200");
+//
+//	        }
+//	    };
+//	}
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {

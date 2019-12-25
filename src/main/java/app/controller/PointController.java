@@ -26,14 +26,14 @@ public class PointController {
         this.userRepository = userRepository;
     }
 
-    @CrossOrigin
+//    @CrossOrigin
     @GetMapping
     Collection<Point> allPoints(Principal user) {
         logger.info("all points request from "+user.getName());
         return pointRepository.findAllByUser(userRepository.findOneByUsername(user.getName()));
     }
 
-    @CrossOrigin
+//    @CrossOrigin
     @PostMapping
     Point newPoint(@RequestBody Point newPoint, Principal user) {
         logger.info("New point request from "+user.getName());
@@ -43,7 +43,7 @@ public class PointController {
     }
 
 
-    @CrossOrigin
+//    @CrossOrigin
     @GetMapping("recalculate")
     Collection<Point> allPointsRecalculation(Double r, Principal user) {
         logger.info("Recalculate points request from "+user.getName());
