@@ -9,7 +9,8 @@ import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
-public class UserCredentials implements Serializable {
+@NoArgsConstructor
+public class User implements Serializable {
     private String username;
     private String password;
 }

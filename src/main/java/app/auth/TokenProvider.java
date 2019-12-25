@@ -35,9 +35,9 @@ public class TokenProvider {
     }
 
     public String resolveToken(HttpServletRequest req) {
-        String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Basic ")) {
-            return bearerToken.substring(6);
+        String tokenHeader = req.getHeader("Authorization");
+        if (tokenHeader != null && tokenHeader.startsWith("Bearer ")) {
+            return tokenHeader.substring(7);
         }
         return null;
     }

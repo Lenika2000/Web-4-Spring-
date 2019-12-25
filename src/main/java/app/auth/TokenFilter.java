@@ -23,6 +23,7 @@ public class TokenFilter extends GenericFilterBean {
         String token = tokenProvider.resolveToken((HttpServletRequest) req);
 
         if (token != null && tokenProvider.validateToken(token)) {
+            //Пользователь считается авторизованным, если в SecurityContext есть заполненный объект Authentication
             Authentication auth = tokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
         }

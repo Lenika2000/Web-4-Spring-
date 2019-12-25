@@ -30,12 +30,13 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
+	//включаем cors-запросы
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 	    return new WebMvcConfigurerAdapter() {
 	        @Override
 	        public void addCorsMappings(CorsRegistry registry) {
-	            registry.addMapping("/**").allowedOrigins("http://localhost:3000");
+	            registry.addMapping("/**").allowedOrigins("http://localhost:4200");
 	          
 	        }
 	    };
@@ -50,15 +51,20 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
+				// Выключем стандартную аутентификацию спринга логин:пароль с каждым запросом
 				.httpBasic().disable()
 				.csrf().disable()
+				//выключаем сессию
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
+				//для запросов get и post с url /api/points/* требуется аутентификация
 				.authorizeRequests()
 				.antMatchers(HttpMethod.GET, "/api/points/**").authenticated()
 				.antMatchers(HttpMethod.POST, "/api/points/**").authenticated()
+				//для остальных запросов аутентификация не требуется
 				.anyRequest().permitAll()
 				.and()
+				//применяем систему аутентификации
 				.apply(new SecurityConfigurer(tokenProvider));
 	}
 

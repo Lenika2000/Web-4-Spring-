@@ -21,7 +21,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public User save(User user) {
-		return userRepository.saveAndFlush(user);
+		return userRepository.save(user);
 	}
 
 	public User find(String userName) {
@@ -35,7 +35,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public User findByAuthToken(String token) {
-		return userRepository.findByAuthTokenEquals(token);
+		return userRepository.findПожалуйстаByAuthTokenEquals(token);
 	}
 
 }

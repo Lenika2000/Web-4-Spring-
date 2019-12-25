@@ -11,7 +11,7 @@ import java.io.IOException;
 
 @Slf4j
 public class TokenAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
+     //срабатывает в случае провала аутентификации по токену
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException {

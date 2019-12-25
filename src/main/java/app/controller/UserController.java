@@ -2,16 +2,13 @@ package app.controller;
 
 import app.auth.TokenProvider;
 import app.data.ResponseMessage;
-import app.data.UserCredentials;
+import app.data.User;
 import app.services.UserService;
-import app.entities.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,8 +38,8 @@ public class UserController {
 
 
 	@CrossOrigin
-	@PostMapping(value = "/register")
-	public ResponseEntity<ResponseMessage> createUser(@RequestBody User newUser) {
+	@PostMapping("register")
+	public ResponseEntity<ResponseMessage> createUser(@RequestBody app.entities.User newUser) {
 		if (newUser.getUsername() == null || newUser.getPassword() == null ||
 				newUser.getPassword().trim().equals("") || newUser.getUsername().trim().equals("")) {
 			logger.error("username or pass is null");
@@ -60,8 +57,8 @@ public class UserController {
 	}
 
 	@CrossOrigin
-	@PostMapping("/login")
-	public ResponseEntity<ResponseMessage> user(@RequestBody UserCredentials data) {
+	@PostMapping("login")
+	public ResponseEntity<ResponseMessage> user(@RequestBody User data) {
 		if (data.getUsername() == null || data.getPassword() == null) {
 			logger.error("username or pass is null");
 			return new ResponseEntity<>(new ResponseMessage("Username or password is null"), HttpStatus.BAD_REQUEST);
@@ -78,7 +75,7 @@ public class UserController {
 	}
 
 	@CrossOrigin
-	@PostMapping(value = "/logout")
+	@PostMapping(value = "logout")
 	public ResponseEntity<ResponseMessage> logout(Principal user) {
 		try {
 			userService.invalidateToken(user.getName());
