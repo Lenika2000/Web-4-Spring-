@@ -1,6 +1,6 @@
 package app.config;
 
-import app.auth.TokenProvider;
+import app.authentication.TokenProvider;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+//установить некоторые особенности конфигурации безопасности.
 @Configurable
 @EnableWebSecurity
 public class WebConfig extends WebSecurityConfigurerAdapter {
@@ -30,17 +31,17 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-//	//включаем cors-запросы
-//	@Bean
-//	public WebMvcConfigurer corsConfigurer() {
-//	    return new WebMvcConfigurerAdapter() {
-//	        @Override
-//	        public void addCorsMappings(CorsRegistry registry) {
-//	            registry.addMapping("/**").allowedOrigins("http://localhost:4200");
-//
-//	        }
-//	    };
-//	}
+	//включаем cors-запросы
+	@Bean
+	public WebMvcConfigurer corsConfigurer() {
+	    return new WebMvcConfigurerAdapter() {
+	        @Override
+	        public void addCorsMappings(CorsRegistry registry) {
+	            registry.addMapping("/**").allowedOrigins("http://localhost:4200");
+
+	        }
+	    };
+	}
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {
@@ -53,8 +54,9 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 		http
 				// Выключем стандартную аутентификацию спринга логин:пароль с каждым запросом
 				.httpBasic().disable()
+				// выключаем защиту от CSRF атак(защиты от перекрестных запросов)
 				.csrf().disable()
-				//выключаем сессию
+				//не сохранять состояние
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
 				//для запросов get и post с url /api/points/* требуется аутентификация

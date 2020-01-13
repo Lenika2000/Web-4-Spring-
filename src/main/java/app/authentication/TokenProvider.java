@@ -1,4 +1,4 @@
-package app.auth;
+package app.authentication;
 
 import app.services.UserService;
 import app.entities.User;
@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 
 @Component
 public class TokenProvider {
@@ -23,14 +22,18 @@ public class TokenProvider {
 
     public String createToken(String username) {
         User user = userService.find(username);
-        String token = tokenService.generateNewToken();
+        String token = user.getAuthToken();
+        if (token == null) {
+            token = tokenService.generateNewToken();
+        }
         user.setAuthToken(token);
         userService.save(user);
 
         return token;
     }
+
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = this.userService.findByAuthToken(token);
+        UserDetails userDetails = userService.findByAuthToken(token);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
@@ -41,6 +44,7 @@ public class TokenProvider {
         }
         return null;
     }
+
     public boolean validateToken(String token) {
         return userService.findByAuthToken(token) != null;
     }

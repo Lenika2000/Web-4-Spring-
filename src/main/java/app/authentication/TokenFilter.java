@@ -1,4 +1,4 @@
-package app.auth;
+package app.authentication;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,9 +13,11 @@ import java.io.IOException;
 
 public class TokenFilter extends GenericFilterBean {
     private TokenProvider tokenProvider;
+
     public TokenFilter(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
+
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain)
             throws IOException, ServletException {

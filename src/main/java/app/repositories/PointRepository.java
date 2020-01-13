@@ -12,4 +12,7 @@ import java.util.Collection;
 @Repository
 public interface PointRepository extends CrudRepository<Point, Long> {
     Collection<Point> findAllByUser(User user);
+    Point findById(double id);
+
+
 }

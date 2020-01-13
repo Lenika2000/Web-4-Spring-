@@ -35,7 +35,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	public User findByAuthToken(String token) {
-		return userRepository.findПожалуйстаByAuthTokenEquals(token);
+		return userRepository.findByAuthTokenEquals(token);
 	}
 
 }
