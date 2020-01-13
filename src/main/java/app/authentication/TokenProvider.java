@@ -20,12 +20,15 @@ public class TokenProvider {
         this.tokenService = tokenService;
     }
 
-    public String createToken(String username) {
+    public String resolveToken(String username) {
         User user = userService.find(username);
+
         String token = user.getAuthToken();
+
         if (token == null) {
             token = tokenService.generateNewToken();
         }
+
         user.setAuthToken(token);
         userService.save(user);
 

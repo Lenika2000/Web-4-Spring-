@@ -38,7 +38,6 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 	        @Override
 	        public void addCorsMappings(CorsRegistry registry) {
 	            registry.addMapping("/**").allowedOrigins("http://localhost:4200");
-
 	        }
 	    };
 	}
@@ -63,6 +62,9 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers(HttpMethod.GET, "/api/points/**").authenticated()
 				.antMatchers(HttpMethod.POST, "/api/points/**").authenticated()
+				.antMatchers(HttpMethod.PUT, "/api/points/**").authenticated()
+				.antMatchers(HttpMethod.DELETE, "/api/points/**").authenticated()
+				.antMatchers(HttpMethod.POST, "/api/users/logout").authenticated()
 				//для остальных запросов аутентификация не требуется
 				.anyRequest().permitAll()
 				.and()

@@ -6,9 +6,7 @@ import app.repositories.UserRepository;
 import app.entities.Point;
 import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/points")
@@ -24,12 +22,18 @@ public class PointController {
         this.userRepository = userRepository;
     }
 
+    @CrossOrigin
     @GetMapping
-    Collection<Point> allPoints(Principal user) {
+    Object[] allPoints(Principal user) {
+        Collection<Point> allUserPoints = pointRepository.findAllByUser(userRepository.findOneByUsername(user.getName()));
 
-        return pointRepository.findAllByUser(userRepository.findOneByUsername(user.getName()));
+        Object[] arrayPoints = allUserPoints.toArray();
+
+        Arrays.sort(arrayPoints, (a, b) -> ((Point) a).getId() > ((Point) b).getId() ? 1 : -1);
+        return arrayPoints;
     }
 
+    @CrossOrigin
     @PostMapping
     Point newPoint(@RequestBody Point newPoint, Principal user) {
 
@@ -38,7 +42,7 @@ public class PointController {
         return pointRepository.save(newPoint);
     }
 
-
+    @CrossOrigin
     @GetMapping("recalculate")
     Collection<Point> allPointsRecalculation(Double r, Principal user) {
 
@@ -54,13 +58,13 @@ public class PointController {
         return recalculated;
     }
 
-    @PostMapping("updatePoint")
-    Point collectionWithChangedPoint(@RequestBody Point changedPoint, Principal user) {
+    @CrossOrigin
+    @PutMapping
+    Point updatePoint(@RequestBody Point changedPoint, Principal user) {
         Point point = pointRepository.findById(changedPoint.getId()).get();
         point.setR(changedPoint.getR());
         point.setResult(graphic.isInArea(point));
         return pointRepository.save(point);
-
     }
 
 }

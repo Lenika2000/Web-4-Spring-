@@ -63,7 +63,7 @@ public class UserController {
 		try {
 			String username = data.getUsername();
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
-			String token = tokenProvider.createToken(username);
+			String token = tokenProvider.resolveToken(username);
 			return new ResponseEntity<>(new ResponseMessage(token), HttpStatus.OK);
 		} catch (AuthenticationException e) {
 			return new ResponseEntity<>(new ResponseMessage("Неверный логин или пароль"), HttpStatus.UNAUTHORIZED);
