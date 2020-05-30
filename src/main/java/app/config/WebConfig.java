@@ -17,7 +17,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 //установить некоторые особенности конфигурации безопасности.
 @Configurable
 @EnableWebSecurity
-public class WebConfig extends WebSecurityConfigurerAdapter {
+public class WebConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
 
 	private final TokenProvider tokenProvider;
 
@@ -31,16 +31,13 @@ public class WebConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	//включаем cors-запросы
-	@Bean
-	public WebMvcConfigurer corsConfigurer() {
-	    return new WebMvcConfigurerAdapter() {
-	        @Override
-	        public void addCorsMappings(CorsRegistry registry) {
-	            registry.addMapping("/**").allowedOrigins("http://localhost:4200");
-	        }
-	    };
+	//включаем cors-запросы, если тестим на локалке
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**")
+				.allowedOrigins("http://localhost:4200").allowedMethods("*");
 	}
+
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder() {

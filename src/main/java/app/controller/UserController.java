@@ -33,7 +33,7 @@ public class UserController {
 	}
 
 
-	@CrossOrigin
+
 	@PostMapping("register")
 	public ResponseEntity<ResponseMessage> createUser(@RequestBody app.entities.User newUser) {
 		if (newUser.getUsername() == null || newUser.getPassword() == null ||
@@ -52,7 +52,7 @@ public class UserController {
 		return new ResponseEntity<>(new ResponseMessage("Пользователь успешно создан"), HttpStatus.OK);
 	}
 
-	@CrossOrigin
+
 	@PostMapping("login")
 	public ResponseEntity<ResponseMessage> user(@RequestBody User data) {
 		if (data.getUsername() == null || data.getPassword() == null) {
@@ -70,7 +70,7 @@ public class UserController {
 		}
 	}
 
-	@CrossOrigin
+
 	@PostMapping(value = "logout")
 	public ResponseEntity<ResponseMessage> logout(Principal user) {
 		try {

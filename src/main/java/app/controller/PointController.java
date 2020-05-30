@@ -1,6 +1,7 @@
 package app.controller;
 
 import app.model.Graphic;
+import app.modification.PointCounter;
 import app.repositories.PointRepository;
 import app.repositories.UserRepository;
 import app.entities.Point;
@@ -14,15 +15,17 @@ public class PointController {
     private final PointRepository pointRepository;
     private final UserRepository userRepository;
     private final Graphic graphic;
+    private PointCounter pointCounter;
 
 
-    PointController(PointRepository pointRepository, UserRepository userRepository, Graphic graphic) {
+
+    PointController(PointRepository pointRepository, UserRepository userRepository, Graphic graphic, PointCounter pointCounter) {
         this.pointRepository = pointRepository;
         this.graphic = graphic;
         this.userRepository = userRepository;
+        this.pointCounter = pointCounter;
     }
 
-    @CrossOrigin
     @GetMapping
     Object[] allPoints(Principal user) {
         Collection<Point> allUserPoints = pointRepository.findAllByUser(userRepository.findOneByUsername(user.getName()));
@@ -33,16 +36,19 @@ public class PointController {
         return arrayPoints;
     }
 
-    @CrossOrigin
+
     @PostMapping
     Point newPoint(@RequestBody Point newPoint, Principal user) {
-
-        newPoint.setResult(graphic.isInArea(newPoint));
+        boolean result = graphic.isInArea(newPoint);
+        newPoint.setResult(result);
         newPoint.setUser(userRepository.findOneByUsername(user.getName()));
+        pointCounter.incUserPointCount(user.getName()); //для отслеживания добавления точки с помощью MBean
+        if (result) pointCounter.incUserPointHitsCount(user.getName());
+        pointCounter.changeHitsPercent(user.getName());
         return pointRepository.save(newPoint);
     }
 
-    @CrossOrigin
+
     @GetMapping("recalculate")
     Collection<Point> allPointsRecalculation(Double r, Principal user) {
 
@@ -51,20 +57,36 @@ public class PointController {
 
         for (Point p : points) {
             Point point = new Point(null, p.getX(), p.getY(), r, false, null);
+            changeHits(user.getName(),p, point );
             point.setResult(graphic.isInArea(point));
             recalculated.add(point);
         }
 
+        pointCounter.changeHitsPercent(user.getName());
         return recalculated;
     }
 
-    @CrossOrigin
+
     @PutMapping
     Point updatePoint(@RequestBody Point changedPoint, Principal user) {
         Point point = pointRepository.findById(changedPoint.getId()).get();
         point.setR(changedPoint.getR());
         point.setResult(graphic.isInArea(point));
         return pointRepository.save(point);
+    }
+
+    void changeHits(String username, Point oldP, Point newP) {
+        boolean result = graphic.isInArea(newP);
+        if (oldP.isResult()) {
+            if (!result) { //Если при пред. радиусе точка попадала в обл, а сейчас не попадает
+                pointCounter.decUserPointHitsCount(username); //уменьшаем количество попаданий на 1
+            }
+        } else { //точка не попадала на предыдущем радиусе, а сейчас попадает
+            if (result) {
+                pointCounter.incUserPointHitsCount(username);
+            }
+        }
+
     }
 
 }
